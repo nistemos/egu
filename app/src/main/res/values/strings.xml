@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">egu</string>
+    <string name="welcome">Welcome to Egu (university government elections)</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="clave">Clave</string>
+    <string name="enter_to_vote">Enter to vote</string>
+    <string name="welcome_to_egu">Welcome to Egu</string>
+    <string name="candidates">Candidates</string>
+    <string name="vote">Vote</string>
+    <string name="voting">Voting</string>
+    <string name="sign_off">Sign off</string>
+    <string name="candidate_for">"Candidate for "</string>
+    <string name="egu">EGU</string>
+    <string name="candidatos_que_puntuan_las_elecciones">Candidatos que puntuan las elecciones</string>
+    <string name="total_votos">Total votos</string>
+</resources>

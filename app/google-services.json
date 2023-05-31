@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "22849796030",
+    "firebase_url": "https://egu-voting-df8d3-default-rtdb.firebaseio.com",
+    "project_id": "egu-voting-df8d3",
+    "storage_bucket": "egu-voting-df8d3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22849796030:android:c9219985892695538a2bef",
+        "android_client_info": {
+          "package_name": "com.example.egu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4tVvHb81EtOTYN4jzCY2-xexa3iD_hvQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
