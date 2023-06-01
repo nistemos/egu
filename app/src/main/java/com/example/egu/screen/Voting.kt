@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Card
@@ -24,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -32,7 +36,7 @@ import com.example.egu.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ComposableVoting(navController: NavController){
+fun ComposableVoting(navController: NavController, listCandidate : List<Candidates>){
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -55,50 +59,51 @@ fun ComposableVoting(navController: NavController){
         }
     ) {
         it
-        Voting()
+
+        Voting(listCandidate)
     }
 
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Voting(){
+fun Voting(listCandidate : List<Candidates>){
     Column(
         modifier = Modifier
-            .padding(start = 32.dp, end = 32.dp)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
         Text(text = stringResource(R.string.candidatos_que_puntuan_las_elecciones))
-        Row(
-            modifier = Modifier
-                .padding(vertical = 20.dp)
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Card(
-                onClick = { /* Do something */ },
-                modifier = Modifier.size(width = 160.dp, height = 100.dp)
-            ) {
-                Box(Modifier.fillMaxSize()) {
-                    Text("Candidato 1", Modifier.align(Alignment.Center))
-                }
-            }
-            Spacer(modifier = Modifier.padding(horizontal = 5.dp))
-            Card(
-                onClick = { /* Do something */ },
-                modifier = Modifier.size(width = 160.dp, height = 100.dp)
-            ) {
-                Box(Modifier.fillMaxSize()) {
-                    Text("Candidato 2", Modifier.align(Alignment.Center))
+            items(listCandidate){candidate->
+                Card(
+                    onClick = { /* Do something */ },
+                    modifier = Modifier.padding(8.dp).size(width = 200.dp, height = 100.dp)
+                )
+                {
+                    Column(
+                        Modifier.fillMaxSize()
+                        .wrapContentHeight(Alignment.CenterVertically)
+                            .padding(horizontal = 10.dp)
+                    ) {
+                        Text(
+                            candidate.name,
+                            Modifier
+                            .align(Alignment.CenterHorizontally)
+                        )
+                        Text("Votos " + candidate.voto,
+                            Modifier
+                            .align(Alignment.CenterHorizontally)
+                        )
+
+                    }
                 }
             }
         }
-        Text(text = stringResource(R.string.total_votos))
-        LinearProgressIndicator(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(15.dp),
-            progress = 0.7f,
-        )
+        Text(text = stringResource(R.string.total_votos) + " "+(listCandidate.reduce{acc,valor->  Candidates("","","","","",acc.voto+valor.voto) }).voto)
     }
 }

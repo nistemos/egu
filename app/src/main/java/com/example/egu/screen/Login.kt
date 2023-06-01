@@ -62,7 +62,6 @@ fun Login(text: String, navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     auth = Firebase.auth
-
     Column(
         modifier = Modifier
             .padding(start = 32.dp, end = 32.dp)

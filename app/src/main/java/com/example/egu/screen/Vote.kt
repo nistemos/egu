@@ -37,13 +37,28 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.egu.R
+import com.example.egu.navigation.AppScreen
+import com.example.egu.navigation.getCandidate
+import com.example.egu.navigation.getCurrentUid
+import com.example.egu.navigation.getVote
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import java.io.Serializable
 
 
-data class CandidatesVote(val photo: String, val name: String, val candidate: String)
+data class CandidatesVote(
+    val user: String,
+    val candidate: String
+    ) :Serializable{
+        constructor():this("","")
+    }
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ComposableVote(navController: NavController, candidates: List<CandidatesVote>){
+fun ComposableVote(navController: NavController, candidates: List<Candidates>){
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -72,7 +87,7 @@ fun ComposableVote(navController: NavController, candidates: List<CandidatesVote
             verticalArrangement = Arrangement.Center
         ) {
             items(candidates) { candidates ->
-                Vote(candidates)
+                Vote(candidates,navController)
             }
         }
     }
@@ -80,7 +95,7 @@ fun ComposableVote(navController: NavController, candidates: List<CandidatesVote
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Vote(candidates: CandidatesVote) {
+fun Vote(candidates: Candidates,navController: NavController) {
     var openDialog by remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
@@ -90,8 +105,29 @@ fun Vote(candidates: CandidatesVote) {
     ){
         Card(
             onClick = {
-                      /* Do something */
-                openDialog = !openDialog
+                val data = mutableMapOf<String, Any>()
+                System.out.println("voto " + candidates.voto)
+                data["voto"] = candidates.voto + 1
+
+                db.document("candidate/"+candidates.id)
+                    .update(data).addOnCompleteListener {task ->
+                        if(task.isSuccessful){
+                            db.collection("vote").add(CandidatesVote(getCurrentUid(),candidates.id)).addOnCompleteListener(
+                                OnCompleteListener {task ->
+                                if(task.isSuccessful){
+                                    getCandidate()
+                                    getVote(getCurrentUid())
+                                    openDialog = !openDialog
+                                }
+
+                                }
+                            )
+
+                        }
+                    }.addOnFailureListener{e->
+                        System.out.println(e.toString())
+                    }
+
                       },
             modifier = Modifier.size(width = 160.dp, height = 100.dp),
             elevation = CardDefaults.cardElevation()
@@ -100,10 +136,10 @@ fun Vote(candidates: CandidatesVote) {
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        candidates.photo,
+                   /* Text(
+                        candidates.image,
                         Modifier.align(Alignment.CenterHorizontally)
-                    )
+                    )*/
                     Text(
                         candidates.name,
                         Modifier.align(Alignment.CenterHorizontally)
@@ -113,15 +149,6 @@ fun Vote(candidates: CandidatesVote) {
                         Modifier.align(Alignment.CenterHorizontally)
                     )
                 }
-            }
-        }
-        Spacer(modifier = Modifier.padding(horizontal = 5.dp))
-        Card(
-            onClick = { /* Do something */ },
-            modifier = Modifier.size(width = 160.dp, height = 100.dp)
-        ) {
-            Box(Modifier.fillMaxSize()) {
-                Text("Clickable", Modifier.align(Alignment.Center))
             }
         }
     }
@@ -139,12 +166,20 @@ fun Vote(candidates: CandidatesVote) {
                 }
             },
             confirmButton = {
-                TextButton(onClick = { openDialog = false }) {
+                TextButton(onClick = {
+                    openDialog = false
+                    navController.navigate(route = AppScreen.PlatformScreen.route)
+
+                }) {
                     Text("Aceptar")
                 }
             },
             dismissButton = {
-                TextButton(onClick = { openDialog = false }) {
+                TextButton(onClick = {
+                    openDialog = false
+                    navController.navigate(route = AppScreen.PlatformScreen.route)
+
+                }) {
                     Text("Cancelar")
                 }
             }

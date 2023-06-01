@@ -23,14 +23,22 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.egu.navigation.AppScreen
 import com.example.egu.R
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 
 @Composable
 fun ComposableSplash(navController: NavController) {
+
     LaunchedEffect(key1 = true){
+        val auth = Firebase.auth
+        var route = AppScreen.LoginScreen.route
+        if(auth.currentUser!= null){
+            route= AppScreen.PlatformScreen.route
+        }
         delay(5000)
         navController.popBackStack()
-        navController.navigate(AppScreen.LoginScreen.route)
+        navController.navigate(route)
     }
     Splash(text = stringResource(R.string.welcome))
 }

@@ -1,7 +1,5 @@
 package com.example.egu.screen
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -46,13 +44,23 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.io.Serializable
 
-data class Candidates(val name: String, val candidate: String, val proposal: String,val  image: String) :Serializable{
-    constructor() : this("", "", "", "")
+val voyo=0
+data class Candidates(
+    val name: String,
+    val candidate: String,
+    val proposal: String,
+    val id : String,
+    val  image: String,
+    val voto : Int) :Serializable{
+    constructor() : this("", "", "", "","",0)
 }
 val db = Firebase.firestore
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ComposablePlatformListCandidate(navController: NavController){
+fun ComposablePlatformListCandidate(
+    navController: NavController,
+    listCandidates: List<Candidates>
+){
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -79,7 +87,7 @@ fun ComposablePlatformListCandidate(navController: NavController){
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                items(GetCanditates()){ candidate ->
+                items(listCandidates){ candidate ->
                     PlatformListCandidate(candidate)
                 }
             }
@@ -88,21 +96,6 @@ fun ComposablePlatformListCandidate(navController: NavController){
 }
 
 
-fun GetCanditates(): MutableList<Candidates> {
-    val candidatesList = mutableListOf<Candidates>();
-    db.collection("candidate")
-        .get()
-        .addOnSuccessListener { result ->
-            for (document in result) {
-                val user = document.toObject(Candidates::class.java)
-                candidatesList.add(user)
-            }
-        }
-        .addOnFailureListener { exception ->
-            Log.w(TAG, "Error getting documents.", exception)
-        }
-    return candidatesList
-}
 
 
 @Composable

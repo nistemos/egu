@@ -13,5 +13,5 @@
     <string name="candidate_for">"Candidate for "</string>
     <string name="egu">EGU</string>
     <string name="candidatos_que_puntuan_las_elecciones">Candidatos que puntuan las elecciones</string>
-    <string name="total_votos">Total votos</string>
+    <string name="total_votos">Total votos </string>
 </resources>

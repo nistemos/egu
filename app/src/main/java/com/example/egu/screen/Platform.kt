@@ -23,11 +23,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.egu.R
 import com.example.egu.navigation.AppScreen
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ComposablePlatform(navController: NavController){
+fun ComposablePlatform(navController: NavController,voteList : List<CandidatesVote>){
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -50,12 +52,16 @@ fun ComposablePlatform(navController: NavController){
         }
     ) {
         it
-        Platform(modifier = Modifier, navController)
+        Platform(modifier = Modifier, navController,voteList)
     }
 }
 
 @Composable
-fun Platform(modifier: Modifier, navController: NavController) {
+fun Platform(
+    modifier: Modifier,
+    navController: NavController,
+    voteList : List<CandidatesVote>
+    ) {
     Column(
         modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -76,16 +82,18 @@ fun Platform(modifier: Modifier, navController: NavController) {
                 text = stringResource(R.string.candidates)
             )
         }
-        Button(
-            onClick = {
-                navController.navigate(route = AppScreen.ComposableVoteScreen.route)
-            },
-            modifier = Modifier
-                .width(200.dp),
-        ) {
-            Text(
-                text = stringResource(R.string.vote)
-            )
+        if(voteList.isEmpty()) {
+            Button(
+                onClick = {
+                    navController.navigate(route = AppScreen.ComposableVoteScreen.route)
+                },
+                modifier = Modifier
+                    .width(200.dp),
+            ) {
+                Text(
+                    text = stringResource(R.string.vote)
+                )
+            }
         }
         Button(
             onClick = {
@@ -99,7 +107,10 @@ fun Platform(modifier: Modifier, navController: NavController) {
             )
         }
         Button(
-            onClick = { },
+            onClick = {
+                Firebase.auth.signOut()
+                navController.navigate(route = AppScreen.LoginScreen.route)
+            },
             modifier = Modifier
                 .width(200.dp),
         ) {
